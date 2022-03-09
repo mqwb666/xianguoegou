@@ -1,0 +1,476 @@
+<!DOCTYPE>
+<html >
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+ <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="css/style.css"/>       
+        <link href="assets/css/codemirror.css" rel="stylesheet">
+        <link rel="stylesheet" href="assets/css/ace.min.css" />
+        <link rel="stylesheet" href="font/css/font-awesome.min.css" />
+        <!--[if lte IE 8]>
+		  <link rel="stylesheet" href="assets/css/ace-ie.min.css" />
+		<![endif]-->
+		<script src="js/jquery-1.9.1.min.js"></script>
+		<script src="assets/js/typeahead-bs2.min.js"></script>   
+        <script src="js/lrtk.js" type="text/javascript" ></script>		
+		<script src="assets/js/jquery.dataTables.min.js"></script>
+		<script src="assets/js/jquery.dataTables.bootstrap.js"></script>
+        <script src="assets/layer/layer.js" type="text/javascript" ></script>          
+        <script src="assets/dist/echarts.js"></script>
+      
+<title>用户等级</title>
+</head>
+
+<body onload="body(1)">
+<div class="grading_style"> 
+<div id="category">
+    <div id="scrollsidebar" class="left_Treeview">
+    <div class="show_btn" id="rightArrow"><span></span></div>
+    <div class="widget-box side_content" >
+    <div class="side_title"><a title="隐藏" class="close_btn"><span></span></a></div>
+     <div class="side_list">
+      <div class="widget-header header-color-green2">
+          <h4 class="lighter smaller">用户等级</h4>
+      </div>
+      <div class="widget-body">
+         <ul id="Lev" class="b_P_Sort_list">
+             <li><i class="orange  fa fa-user-secret"></i><a href="#">全部(0)</a></li>
+             <li><i class="fa fa-diamond pink"></i> <a href="#">Level.0(0)</a></li>
+             <li><i class="fa fa-diamond pink"></i> <a href="#">Level.1(0)</a></li>
+             <li><i class="fa fa-diamond pink"></i> <a href="#">Level.2(0)</a></li>
+             <li><i class="fa fa-diamond red "></i> <a href="#">Level.3(0)</a></li>
+             <li><i class="fa fa-diamond red "></i> <a href="#">Level.4(0)</a></li>
+             <li><i class="fa fa-diamond blue"></i> <a href="#">Level.5(0)</a></li>
+             <li><i class="fa fa-diamond blue"></i> <a href="#">Level.6(0)</a></li>
+            </ul>
+  </div>
+  </div>
+  </div>  
+  </div>
+  <!--右侧样式-->
+   <div class="page_right_style right_grading">
+   <div class="Statistics_style" id="Statistic_pie">
+     <div class="type_title">等级统计 
+     <span class="top_show_btn Statistic_btn">显示</span> 
+     <span class="Statistic_title Statistic_btn"><a title="隐藏" class="top_close_btn">隐藏</a></span>
+     </div> 
+      <div id="Statistics" class="Statistics"></div> 
+      </div>
+      <!--列表样式-->
+      <div class="grading_list">
+       
+       
+       
+       
+       <div class="page-content clearfix">
+    <div id="Member_Ratings">
+      <div class="d_Confirm_Order_style">
+    
+    <div class="type_title">用户等级列表</div>
+
+    
+     <div class="table_menu_list">
+       <table class="table table-striped table-bordered table-hover" id="sample-table">
+		<thead>
+		 <tr>
+				<th width="80">ID</th>
+				<th width="100">用户名</th>
+				<th width="80">性别</th>
+				<th width="120">生日</th>
+				<th width="120">年龄</th>
+				<th width="120">手机号</th>
+				<th width="150">电子邮箱</th>
+                <th width="100">等级</th>
+                <th width="100">角色</th>
+				<th width="180">注册日期</th>
+				<th width="180">头像图片地址</th>
+				<th width="70">是否注销</th>                
+				<th width="250">操作</th>
+				
+			</tr>
+		</thead>
+		<tbody id="users"></tbody>
+	
+	</table>
+	 
+	<div >
+	
+		<span id="record">第 0 到 0 条记录，共 0 条</span>
+		<span  id="limit" ></span>
+	</div>
+   </div>
+  </div>
+ </div>
+</div>
+       
+              
+       
+       
+       
+       
+       
+
+   
+   
+      </div>
+      
+      
+      
+   </div> 
+  </div>
+</div>
+</body>
+</html>
+
+
+<script type="text/javascript"> 
+
+var num;
+var page;
+var _page;
+var count;
+var _level
+var level;
+var le = new Array();
+
+function body(page) {
+	num=5;
+	level=-1
+	$.ajax({
+		url:"userServlet?type=countUser",
+		type:"post",
+		data:"json",
+		success:function (data){
+			 count=eval('(' + data+ ')');
+			 
+			 
+			    		selectUserByLevel(page,level) 
+		}
+	}); 
+	
+}
+
+function selectUserByLevel(page,level){
+	_level=level;
+	$.ajax({	
+		url:"userServlet?type=countByLevel",
+		type:"post",
+		data:"json",
+		success:function (data){
+			var L=eval('(' + data+ ')');
+
+			le[0]=(L.Level0==null?0:L.Level0)
+			le[1]=(L.Level1==null?0:L.Level1)
+			le[2]=(L.Level2==null?0:L.Level2)
+			le[3]=(L.Level3==null?0:L.Level3)
+			le[4]=(L.Level4==null?0:L.Level4)
+			le[5]=(L.Level5==null?0:L.Level5)
+			le[6]=(L.Level6==null?0:L.Level6)
+			le[7]=le[0]+le[1]+le[2]+le[3]+le[4]+le[5]+le[6]
+
+				$("#record").html("第 "+(le[_level==-1?7:_level]!=0?(page-1)*5+1:0)+" 到 "+((page)*5>le[_level==-1?7:_level]?le[_level==-1?7:_level]:(page)*5)+" 条记录，共 "+le[_level==-1?7:_level]+" 条")
+		}})
+		
+	$.ajax({
+		url:"userServlet?type=selectUserByLevel&page="+page+"&level="+_level,
+		type:"post",
+		data:"json",
+		success:function (data){
+			var users=eval('(' + data+ ')');
+			 var h="";
+			 for(var i=0;i<users.length;i++){
+				 var d;
+				 					 
+				 if(users[i].isdelete==0){
+					 s='<a onClick="member_stop(this,'+users[i].id+')"  href="javascript:;" title="停用"  class="btn btn-xs btn-success"><i class="fa fa-check bigger-120"></i></a>'
+					 d='<span class="label label-success radius">已启用</span>'
+				 }else{
+					 s='<a onClick="member_start(this,'+users[i].id+')"  href="javascript:;" title="启用"  class="btn btn-xs"><i class="fa fa-check bigger-120"></i></a>'
+					 d='<span class="label label-defaunt radius">已停用</span>'
+				 }
+				 var sex;
+				 if(users[i].sex==0){
+					 sex="男"
+				 }else{
+					 sex="女"
+				 }
+				 
+				 h+='<tr>'+
+		         /*  '<td><label><input name="test" type="checkbox" class="ace" onclick="f()"><span class="lbl"></span></label></td>'+
+		          */ '<td>'+users[i].id+'</td>'+
+		          '<td><u style="cursor:pointer" class="text-primary" onclick="member_show()">'+users[i].uname+'</u></td>'+
+		          '<td>'+sex+'</td>'+
+		          '<td>'+users[i].birthday+'</td>'+
+		          '<td>'+users[i].age+'</td>'+
+		          '<td>'+users[i].phone+'</td>'+
+		          '<td>'+users[i].email+'</td>'+
+		          '<td>'+users[i].level+'</td>'+
+				  '<td>'+users[i].role+'</td>'+
+				  '<td>'+users[i].uzcbirthday+'</td>'+
+				  '<td> <a href="user_img/'+users[i].pic+'">'+users[i].pic+'</a></td>'+
+		          '<td class="td-status">'+d+'</td>'+
+				  '<td class="td-manage">'+s+
+		          '<a title="删除" href="javascript:;"  onclick="deleteData('+users[i].id+')" class="btn btn-xs btn-warning" ><i class="fa fa-trash  bigger-120"></i></a>'+
+		          '</td>';  
+				  '</tr>';	
+			 }					 
+			 $("#users").html(h);
+			 
+				
+			 
+			 var h='<nav aria-label="Page navigation">'+
+			  '<ul class="pagination"><li>'+
+			      '<a href="javascript:void(0);" onclick="selectUserByLevel('+(page>1?page-1:page)+','+_level+')" aria-label="Previous">'+
+			        '<span aria-hidden="true">上一页</span></a></li>'
+			      
+			 for (var i = 0; i < le[_level==-1?7:_level]/num; i++) {
+				 if(page==i+1){
+					h+='<li class="active"><a href="javascript:void(0);" onclick="selectUserByLevel('+(i+1)+','+_level+')">'+(i+1)+'</a></li>'
+				 }else{
+					 
+					 h+='<li><a href="javascript:void(0);" onclick="selectUserByLevel('+(i+1)+','+_level+')">'+(i+1)+'</a></li>'				 
+				 }
+			}
+			   h+='<li><a href="javascript:void(0);" onclick="selectUserByLevel('+(page<(le[_level==-1?7:_level]/num)?page+1:page)+','+_level+')" aria-label="Next">'+
+			   	  '<span aria-hidden="true">下一页</span></a>'+
+			       '</li></ul></nav>' ;
+			        _page=page;
+			     $("#limit").html(h)
+			
+		}
+	});
+	
+		 		 
+}
+
+
+
+/*数据-删除*/
+ function deleteData(id) {
+	 layer.confirm('确认要该数据删除吗？（注：不可逆）',function(index){
+		 $.ajax({
+				url:"userServlet?type=deleteData&id="+id,
+				type:"post",
+				data:"json",
+				success:function (data){
+					layer.msg('已删除!',{icon:1,time:1000});
+					body(_page)
+			}
+		 });
+			
+		});
+}
+
+
+
+
+
+
+/*用户-停用*/
+function member_stop(obj,id){
+	layer.confirm('确认要停用吗？',function(index){
+		$.ajax({
+			url:"userServlet?type=deleteUser&isdelete=1&id="+id,
+			type:"post",
+			data:"json",
+			success:function (data){
+		 	    $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" class="btn btn-xs " onClick="member_start(this,id)" href="javascript:;" title="启用"><i class="fa fa-check bigger-120"></i></a>');
+				$(obj).parents("tr").find(".td-status").html('<span class="label label-defaunt radius">已停用</span>');
+				$(obj).remove();
+				layer.msg('已停用!',{icon: 5,time:1000});
+				selectUserByLevel(_page,_level)
+				layer.closeAll();		}
+	 });
+		
+	});
+}
+
+/*用户-启用*/
+function member_start(obj,id){
+	layer.confirm('确认要启用吗？',function(index){
+		
+		$.ajax({
+			url:"userServlet?type=deleteUser&isdelete=0&id="+id,
+			type:"post",
+			data:"json",
+			success:function (data){
+				$(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" class="btn btn-xs btn-success" onClick="member_stop(this,id)" href="javascript:;" title="停用"><i class="fa fa-check bigger-120"></i></a>');
+				$(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已启用</span>');
+				$(obj).remove();
+				layer.msg('已启用!',{icon: 6,time:1000});
+				selectUserByLevel(_page,_level)
+				layer.closeAll();		}
+	 });
+		
+	});
+}
+
+
+
+
+/* 
+laydate({
+    elem: '#start',
+    event: 'focus' 
+}); */
+
+
+
+$(function() { 
+	$("#category").fix({
+		float : 'left',
+		//minStatue : true,
+		skin : 'green',	
+		durationTime :false,
+		spacingw:20,
+		spacingh:240,
+		set_scrollsidebar:'.right_grading',
+	});
+});
+$(function() { 
+	$("#Statistic_pie").fix({
+		float : 'top',
+		//minStatue : true,
+		skin : 'green',	
+		durationTime :false,
+		spacingw:0,
+		spacingh:0,
+		close_btn:'.top_close_btn',
+		show_btn:'.top_show_btn',
+		side_list:'.Statistics',
+		close_btn_width:80,
+		side_title:'.Statistic_title',
+	});
+});
+
+ 
+
+//初始化宽度、高度  
+ $(".widget-box").height($(window).height()); 
+ $(".page_right_style").width($(window).width()-220);
+ //$(".table_menu_list").width($(window).width()-240);
+  //当文档窗口发生改变时 触发  
+    $(window).resize(function(){
+	$(".widget-box").height($(window).height());
+	 $(".page_right_style").width($(window).width()-220);
+	 //$(".table_menu_list").width($(window).width()-240);
+	}) 
+/**************/
+
+	$.ajax({	
+		url:"userServlet?type=countByLevel",
+		type:"post",
+		data:"json",
+		success:function (data){
+			var L=eval('(' + data+ ')');
+						
+			var le = new Array();
+			
+			le[0]=(L.Level0==null?0:L.Level0)
+			le[1]=(L.Level1==null?0:L.Level1)
+			le[2]=(L.Level2==null?0:L.Level2)
+			le[3]=(L.Level3==null?0:L.Level3)
+			le[4]=(L.Level4==null?0:L.Level4)
+			le[5]=(L.Level5==null?0:L.Level5)
+			le[6]=(L.Level6==null?0:L.Level6)
+			le[7]=le[0]+le[1]+le[2]+le[3]+le[4]+le[5]+le[6]
+			var h =
+			 '<li><i class="orange  fa fa-user-secret"></i><a href="javascript:void(0);" onclick="selectUserByLevel(1,-1)">全部('+le[7]+')</a></li>'+
+             '<li><i class="fa fa-diamond pink"></i> <a href="javascript:void(0);" onclick="selectUserByLevel(1,0)">Level.0('+le[0]+')</a></li>'+
+             '<li><i class="fa fa-diamond pink"></i> <a href="javascript:void(0);" onclick="selectUserByLevel(1,1)">Level.1('+le[1]+')</a></li>'+
+             '<li><i class="fa fa-diamond pink"></i> <a href="javascript:void(0);" onclick="selectUserByLevel(1,2)">Level.2('+le[2]+')</a></li>'+
+             '<li><i class="fa fa-diamond red"></i> <a href="javascript:void(0);" onclick="selectUserByLevel(1,3)">Level.3('+le[3]+')</a></li>'+
+             '<li><i class="fa fa-diamond red"></i> <a href="javascript:void(0);" onclick="selectUserByLevel(1,4)">Level.4('+le[4]+')</a></li>'+
+             '<li><i class="fa fa-diamond blue"></i> <a href="javascript:void(0);" onclick="selectUserByLevel(1,5)">Level.5('+le[5]+')</a></li>'+
+             '<li><i class="fa fa-diamond blue"></i> <a href="javascript:void(0);" onclick="selectUserByLevel(1,6)">Level.6('+le[6]+')</a></li>'
+			
+			$('#Lev').html(h)
+			
+			
+			  require.config({
+		            paths: {
+		                echarts: './assets/dist'
+		            }
+		        });
+		        require(
+		        		
+		            [
+		                'echarts',
+						'echarts/theme/macarons',
+		                'echarts/chart/pie',   // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表
+		                'echarts/chart/funnel'
+		            ],
+		            function (ec,theme) {
+		                var myChart = ec.init(document.getElementById('Statistics'),theme);
+					
+					option = {
+		    title : {
+		        text: '用户等级统计',
+		        subtext: '实时更新最新等级',
+		        x:'center'
+		    },
+		    tooltip : {
+		        trigger: 'item',
+		        formatter: "{a} <br/>{b} : {c} ({d}%)"
+		    },
+		    legend: {
+		        
+		        x : 'center',
+		        y : 'bottom',
+		        data:['Level.0','Level.1','Level.2','Level.3','Level.4','Level.5','Level.6']
+		    },
+		    toolbox: {
+		        show : true,
+		        feature : {
+		            mark : {show: false},
+		            dataView : {show: false, readOnly: true},
+		            magicType : {
+		                show: true, 
+		                type: ['pie', 'funnel'],
+		                option: {
+		                    funnel: {
+		                        x: '25%',
+		                        width: '50%',
+		                        funnelAlign: 'left',
+		                        max: 6200
+		                    }
+		                }
+		            },
+		            restore : {show: true},
+		            saveAsImage : {show: true}
+		        }
+		    },
+		    calculable : true,
+		    series : [
+		        {
+		            name:'品牌数量',
+		            type:'pie',
+		            radius : '55%',
+		            center: ['50%', '60%'],
+		            data:[
+		                {value:L.Level0, name:'Level.0'},
+		                {value:L.Level1, name:'Level.1'},
+						{value:L.Level2, name:'Level.2'},
+						{value:L.Level3, name:'Level.3'},
+						{value:L.Level4, name:'Level.4'},
+						{value:L.Level5, name:'Level.5'},
+						{value:L.Level6, name:'Level.6'},
+
+		            ]
+		        }
+		    ]
+		};
+		   myChart.setOption(option);
+					}
+		)
+		}
+	})
+	
+
+ 
+   
+</script>

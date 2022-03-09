@@ -1,0 +1,141 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="js/html5.js"></script>
+<script type="text/javascript" src="js/respond.min.js"></script>
+<script type="text/javascript" src="js/PIE_IE678.js"></script>
+<![endif]-->
+<link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css"/>       
+<link href="assets/css/codemirror.css" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/ace.min.css" />
+      <link rel="stylesheet" href="Widget/zTree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+<link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+<!--[if IE 7]>
+		  <link rel="stylesheet" href="assets/css/font-awesome-ie7.min.css" />
+		<![endif]-->
+<link href="Widget/icheck/icheck.css" rel="stylesheet" type="text/css" />
+<link href="Widget/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
+<style>
+	div{
+		//border:1px solid red;
+	}
+</style>
+
+<title>新增商品</title>
+</head>
+<body>
+<div class="clearfix" id="add_picture">
+
+   <div class="page-content clearfix">
+   <div class="type_title">添加商品</div>
+	<form action="GoodServlet?type=2" method="post" class="form form-horizontal" id="form-article-add" enctype="multipart/form-data">
+		<div class="clearfix cl"  style="float:left>
+        <label class="form-label col-2"><span class="c-red">*</span>商品名称：</label>
+		 <div class="formControls col-10" style="float:right">
+		 <input  style="margin-left:-35px;"name="gname" type="text" class="input-text" value="" placeholder="" id="" name=""></div>
+		</div>
+		<div class=" clearfix cl"  style="margin-left:-30px;width:1200px">
+			
+			<div class="Add_p_s">
+            <label class="form-label col-2">当前库存：</label>
+			<div class="formControls col-2"><input  type="text"  name="nownumber" class="input-text" value="" placeholder="" id="" name=""></div>
+            </div>
+			<div class="Add_p_s">
+             <label class="form-label col-2">累计库存：</label>	
+			 <div class="formControls col-2"><input type="text" name="number"  class="input-text" value="" placeholder="" id="" name=""></div>
+			</div>
+             <div class="Add_p_s">
+             <label class="form-label col-2">产品价格：</label>	
+			 <div class="formControls col-2"><input type="text" name="price" style="width:90px;height:30px" class="input-text" value="" placeholder="" id="" name="" >元/kg</div>
+			</div>
+             <div class="Add_p_s">
+             <label class="form-label col-2">商品类型：</label>	
+			 <div class="formControls col-2"><span class="select-box">
+				<select class="select" name="gtid">
+					<option>请选择</option>
+					<option value="1">商品类型1</option>
+					<option value="2">商品类型2</option>
+					<option value="3">商品类型3</option>
+					<option value="4">商品类型4</option>
+					<option value="5">商品类型5</option>
+				</select>
+				</span></div>
+			</div>
+			<div class="Add_p_s">
+             <label class="form-label col-2">供应商：</label>	
+			 <div class="formControls col-2"><span class="select-box">
+				<select class="select" name="sid">
+					<option>请选择</option>
+					<option value="1">供应商1</option>
+					<option value="2">供应商2</option>
+					<option value="3">供应商3</option>
+					<option value="4">供应商4</option>
+					<option value="5">供应商5</option>
+				</select>
+				</span></div>
+			</div>
+         
+           
+			
+		</div>
+		<label >商品简介：</label>		
+				<input type="text" name="content" style="width:1000px"></input>
+
+		<div class="clearfix cl" style="margin-left:-30px; margin-top:30px">
+			<label class="form-label col-2">图片上传：</label>
+			<input name="pic" type="file">
+		</div>
+		<label class="label_name">状&nbsp;&nbsp;态：</label>
+						<span class="cont_style">
+							&nbsp;&nbsp;
+							<label>
+								<input name="ismarket" type="radio" value="0">已上架</input>
+								<input name="ismarket" type="radio" value="1">未上架</input>
+							</label>
+						</span>
+		<div class="clearfix cl">
+			<div class="Button_operation" style="padding-left:20px">
+				<input style="width: 80px; height: 40px;" type="submit" value="提交"></input>
+				<input style="width: 80px; height: 40px;margin-left:40px" type="button" onclick="backTo()" value="取消"></input>
+			</div>
+		</div>
+		
+	</form>
+    </div>
+</div>
+</div>
+<script src="js/jquery-1.9.1.min.js"></script>   
+<script src="assets/js/bootstrap.min.js"></script>
+<script src="assets/js/typeahead-bs2.min.js"></script>
+<script src="assets/layer/layer.js" type="text/javascript" ></script>
+<script src="assets/laydate/laydate.js" type="text/javascript"></script>
+<script type="text/javascript" src="Widget/My97DatePicker/WdatePicker.js"></script> 
+<script type="text/javascript" src="Widget/icheck/jquery.icheck.min.js"></script> 
+<script type="text/javascript" src="Widget/zTree/js/jquery.ztree.all-3.5.min.js"></script> 
+<script type="text/javascript" src="Widget/Validform/5.3.2/Validform.min.js"></script> 
+<script type="text/javascript" src="Widget/webuploader/0.1.5/webuploader.min.js"></script>
+<script type="text/javascript" src="Widget/ueditor/1.4.3/ueditor.config.js"></script>
+<script type="text/javascript" src="Widget/ueditor/1.4.3/ueditor.all.min.js"> </script>
+<script type="text/javascript" src="Widget/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script> 
+<script src="js/lrtk.js" type="text/javascript" ></script>
+<script type="text/javascript" src="js/H-ui.js"></script> 
+<script type="text/javascript" src="js/H-ui.admin.js"></script> 
+
+
+<script type="text/javascript">
+
+</script>
+<script>
+function backTo(){
+	location.href="Products_List.html";
+}
+</script>
+</body>
+</html>

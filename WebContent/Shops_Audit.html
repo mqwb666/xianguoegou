@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+ <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="css/style.css"/>       
+        <link href="assets/css/codemirror.css" rel="stylesheet">
+        <link rel="stylesheet" href="assets/css/ace.min.css" />
+        <link rel="stylesheet" href="font/css/font-awesome.min.css" />
+        <!--[if lte IE 8]>
+		  <link rel="stylesheet" href="assets/css/ace-ie.min.css" />
+		<![endif]-->
+		<script src="js/jquery-1.9.1.min.js"></script>
+        <script src="assets/js/bootstrap.min.js"></script>
+		<script src="assets/js/typeahead-bs2.min.js"></script>           	
+		<script src="assets/js/jquery.dataTables.min.js"></script>
+		<script src="assets/js/jquery.dataTables.bootstrap.js"></script>
+        <script src="assets/layer/layer.js" type="text/javascript" ></script>          
+        <script src="assets/laydate/laydate.js" type="text/javascript"></script>
+        <script src="js/displayPart.js" type="text/javascript"></script>
+<title>交易金额</title>
+</head>
+
+<body onload="body(1)">
+<div class="margin clearfix">
+ <div class="Shops_Audit">
+   <div id="nocheck" class="prompt">当前共有<b>0</b>家店铺申请入住</div>
+   <!--申请列表-->
+   <div class="audit_list">
+     <table class="table table-striped table-bordered table-hover" id="sample-table">
+       <thead>
+		 <tr>
+ 		 		<th width="80">ID</th>
+				<th width="180">店铺名称</th>
+				<th width="180">简介</th>
+				<th width="120px">管理员id</th>
+				<th width="120px">详细地址</th>
+				<th width="150px">注册时间</th>
+                <th width="100px">审核状态</th>                
+				<th width="150px">操作</th>
+			</tr>
+		</thead>
+        <tbody id="suppliers"></tbody>
+        </table>
+   <div >
+	
+		<span id="record">第 0 到 0 条记录，共 0 条</span>
+		<span  id="limit" ></span>
+	</div>
+   </div>
+ </div>
+</div>
+</body>
+</html>
+
+
+
+<script>
+
+var page;
+var _page;
+var count;
+
+function body(page) {
+	$.ajax({
+		url:"supplierServlet?type=countSupplier&ischeck=0",
+		type:"post",
+		data:"json",
+		success:function (data){
+			 count=eval('(' + data+ ')');
+			 $("#nocheck").html('当前共有<b>'+count+'</b>家店铺申请入住');
+		    		selectLimitSupplier(page) 
+		}
+	}); 
+	
+}
+
+
+function selectLimitSupplier(page){
+	$.ajax({
+		url:"supplierServlet?type=selectLimitSupplier&ischeck=0&page="+page+"&num=5",
+		type:"post",
+		data:"json",
+		success:function (data){
+			var suppliers=eval('(' + data+ ')');
+			 var h="";
+			 for(var i=0;i<suppliers.length;i++){
+				 var d;
+					 
+				 if(suppliers[i].isdelete==0){
+					 s='<a onClick="member_stop(this,'+suppliers[i].id+')"  href="javascript:;" title="停用"  class="btn btn-xs btn-success"><i class="icon-ok bigger-120"></i></a>'
+					 d='<span class="label label-success radius">已启用</span>'
+				 }else{
+					 s='<a onClick="member_start(this,'+suppliers[i].id+')"  href="javascript:;" title="启用"  class="btn btn-xs"><i class="icon-ok bigger-120"></i></a>'
+					 d='<span class="label label-defaunt radius">已停用</span>'
+				 }
+		
+				 var check;
+				 if(suppliers[i].ischeck==1){
+					 check="通过"
+				 }else{
+					 check="待审核"
+				 }
+				 
+				 h+='<tr>'+
+				 '<td>'+suppliers[i].id+'</td>'+
+		          '<td>'+suppliers[i].sname+'</u></td>'+
+		          '<td>'+suppliers[i].content+'</td>'+
+		          '<td>'+suppliers[i].uid+'</td>'+
+		          '<td>'+suppliers[i].contentaddress+'</td>'+
+		          '<td>'+suppliers[i].uzcbirthday+'</td>'+
+		          '<td class="td-status">'+check+'</td>'+
+				  '<td class="td-manage">'+
+				  '<a onClick="member_start(this,'+suppliers[i].id+')"  href="javascript:;" title="通过"  class="btn btn-xs btn-success"><i class="fa fa-check bigger-120"></i></a>'+
+		          '<a title="删除" href="javascript:;"  onclick="deleteData('+suppliers[i].id+')" class="btn btn-xs btn-warning" ><i class="fa fa-close  bigger-120"></i></a>'+
+		          '</td>';  
+				  '</tr>';	
+			 }					 
+			 $("#suppliers").html(h);
+			 
+			 
+			 $("#record").html("第 "+(count==0?0:((page-1)*5+1))+" 到 "+((page)*5>count?count:(page)*5)+" 条记录，共 "+count+" 条")
+	 		 
+			 var h='<nav aria-label="Page navigation">'+
+			  '<ul class="pagination"><li>'+
+			      '<a href="javascript:void(0);" onclick="selectLimitSupplier('+(page>1?page-1:page)+')" aria-label="Previous">'+
+			        '<span aria-hidden="true">上一页</span></a></li>'
+			      
+			 for (var i = 0; i < count/5; i++) {
+				 if(page==i+1){
+					h+='<li class="active"><a href="javascript:void(0);" onclick="selectLimitSupplier('+(i+1)+')">'+(i+1)+'</a></li>'
+				 }else{
+					 h+='<li><a href="javascript:void(0);" onclick="selectLimitSupplier('+(i+1)+')">'+(i+1)+'</a></li>'				 
+				 }
+			}
+			   h+='<li><a href="javascript:void(0);" onclick="selectLimitSupplier('+(page<(count/5)?page+1:page)+')" aria-label="Next">'+
+			   	  '<span aria-hidden="true">下一页</span></a>'+
+			       '</li></ul></nav>' ;
+			     
+			        _page=page;
+			     $("#limit").html(h)
+			
+		}
+	});
+}
+
+
+function member_start(obj,id){
+	layer.confirm('确认要通过审核吗？',function(index){
+		
+		$.ajax({
+			url:"supplierServlet?type=ischeck&id="+id,
+			type:"post",
+			data:"json",
+			success:function (data){
+				$(obj).remove();
+				layer.msg('已通过!',{icon: 6,time:1000});
+				selectLimitSupplier(1);
+				location.reload();
+				layer.closeAll();	
+				}
+	 });
+		
+	});
+}
+
+
+
+
+/*数据-删除*/
+ function deleteData(id) {
+	 layer.confirm('确认要该数据删除吗？',function(index){
+		 $.ajax({
+				url:"supplierServlet?type=deleteData&id="+id,
+				type:"post",
+				data:"json",
+				success:function (data){
+					layer.msg('已删除!',{icon:1,time:1000});
+					body(_page)
+			}
+		 });
+			
+		});
+}
+
+
+</script>
